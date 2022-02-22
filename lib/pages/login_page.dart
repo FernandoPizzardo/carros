@@ -22,14 +22,28 @@ class LoginPage extends StatelessWidget {
         child: Container(
             padding: EdgeInsets.all(16),
             child: ListView(children: [
-              _text("Login", "Digite seu E-mail",
-                  controller: _tLogin, validator: _validateLogin),
-              _text("Senha", "Digite sua Senha",
-                  password: true, controller: _tSenha),
+              _text(
+                "Login",
+                "Digite seu E-mail",
+                controller: _tLogin,
+                validator: _validateLogin,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              _text(
+                "Senha",
+                "Digite sua Senha",
+                password: true,
+                controller: _tSenha,
+                keyboardType: TextInputType.number,
+              ),
               SizedBox(
                 height: _height,
               ),
-              _button("Login", Colors.indigo, _onClickLogin),
+              _button(
+                "Login",
+                Colors.indigo,
+                _onClickLogin,
+              ),
             ])));
   }
 
@@ -39,12 +53,14 @@ class LoginPage extends StatelessWidget {
     bool password = false,
     controller,
     FormFieldValidator<String>? validator,
+    TextInputType? keyboardType,
   }) {
     TextFormField(
       obscureText: password,
       controller: controller,
       validator: validator,
       decoration: InputDecoration(labelText: label, hintText: hint),
+      keyboardType: keyboardType,
     );
   }
 
