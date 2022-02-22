@@ -1,3 +1,5 @@
+import 'package:carros/widgets/app_button.dart';
+import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -6,79 +8,54 @@ class LoginPage extends StatelessWidget {
   final double _height = 20;
   final _formKey = GlobalKey<FormState>();
 
+  final _focusSenha = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Carros"),
       ),
-      body: _body(),
+      body: _body(context),
     );
   }
 
-  _body() {
+  _body(context) {
     return Form(
-        key: _formKey,
-        child: Container(
-            padding: EdgeInsets.all(16),
-            child: ListView(children: [
-              _text(
-                "Login",
-                "Digite seu E-mail",
-                controller: _tLogin,
-                validator: _validateLogin,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              _text(
-                "Senha",
-                "Digite sua Senha",
-                password: true,
-                controller: _tSenha,
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(
-                height: _height,
-              ),
-              _button(
-                "Login",
-                Colors.indigo,
-                _onClickLogin,
-              ),
-            ])));
-  }
-
-  _text(
-    String label,
-    String hint, {
-    bool password = false,
-    controller,
-    FormFieldValidator<String>? validator,
-    TextInputType? keyboardType,
-  }) {
-    TextFormField(
-      obscureText: password,
-      controller: controller,
-      validator: validator,
-      decoration: InputDecoration(labelText: label, hintText: hint),
-      keyboardType: keyboardType,
-    );
-  }
-
-  _button(String text, Color color, Function onPressed) {
-    return Container(
-      height: 46,
-      child: ElevatedButton(
-        style: ButtonStyle(backgroundColor:
-            MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) return color;
-          return color;
-        })),
-        child: Text(
-          text,
-          style: TextStyle(color: Colors.white, fontSize: 22),
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: ListView(
+          children: [
+            AppText(
+              context: context,
+              label: "Login",
+              hint: "Digite seu E-mail",
+              controller: _tLogin,
+              validator: _validateLogin,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              nextFocus: _focusSenha,
+            ),
+            AppText(
+              context: context,
+              label: "Senha",
+              hint: "Digite sua Senha",
+              password: true,
+              controller: _tSenha,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              focusNode: _focusSenha,
+            ),
+            SizedBox(
+              height: _height,
+            ),
+            AppButton(
+              text: "Login",
+              onPressed: _onClickLogin,
+            ),
+          ],
         ),
-        onPressed: onPressed(),
       ),
     );
   }
