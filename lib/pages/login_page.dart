@@ -1,3 +1,4 @@
+import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/home_page.dart';
 import 'package:carros/pages/login_api.dart';
 import 'package:carros/pages/usuario.dart';
@@ -6,13 +7,22 @@ import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final _tLogin = TextEditingController();
   final _tSenha = TextEditingController();
   final double _height = 20;
   final _formKey = GlobalKey<FormState>();
 
   final _focusSenha = FocusNode();
+
+  bool _showProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +67,7 @@ class LoginPage extends StatelessWidget {
             AppButton(
               text: "Login",
               onPressed: _onClickLogin,
+              showProgress: _showProgress,
             ),
           ],
         ),
@@ -73,12 +84,19 @@ class LoginPage extends StatelessWidget {
 
     print("Login: $login, Senha: $senha");
 
-    Usuario? ok = await LoginApi.login(login, senha);
-    if (ok != null) {
+    setState(() {
+      _showProgress = true;
+    });
+
+    ApiResponse? response = await LoginApi.login(login, senha);
+    if (response.ok == true) {
       push(context, const HomePage());
     } else {
-      alert(context, "Erro", "Login ou senha inválidos");
+      alert(context, "Erro", response.error.toString());
     }
+    setState(() {
+      _showProgress = false;
+    });
   }
 
   alert(BuildContext context, String title, String msg) {
@@ -118,5 +136,10 @@ class LoginPage extends StatelessWidget {
         return null;
       };
     }
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    return _LoginPageState();
   }
 }

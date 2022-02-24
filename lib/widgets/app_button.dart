@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   final String? text;
   final Function? onPressed;
+  bool showProgress;
   AppButton({
     Key? key,
     this.text,
     this.onPressed,
+    this.showProgress = false,
   }) : super(key: key);
 
   @override
@@ -20,10 +22,14 @@ class AppButton extends StatelessWidget {
           if (states.contains(MaterialState.selected)) return Colors.indigo;
           return Colors.indigo;
         })),
-        child: Text(
-          text!,
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
+        child: showProgress
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              )
+            : Text(
+                text.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
         onPressed: onPressed!(),
       ),
     );

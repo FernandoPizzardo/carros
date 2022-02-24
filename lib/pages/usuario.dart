@@ -19,10 +19,7 @@ class Usuario {
 
   static List<String>? getRole(Map<String?, dynamic> map) {
     List list = map["roles"];
-    List<String> lista = [];
-    for (String role in list) {
-      lista.add(role);
-    }
+    List<String> lista = list.map<String>((e) => e.toString()).toList();
     return lista;
   }
 }
