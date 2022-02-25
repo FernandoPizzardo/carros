@@ -1,7 +1,7 @@
 import 'package:carros/pages/api_response.dart';
-import 'package:carros/pages/home_page.dart';
-import 'package:carros/pages/login_api.dart';
-import 'package:carros/pages/usuario.dart';
+import 'package:carros/pages/carro/home_page.dart';
+import 'package:carros/pages/login/login_api.dart';
+import 'package:carros/pages/login/usuario.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
@@ -65,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
               height: _height,
             ),
             AppButton(
+              _onClickLogin,
               text: "Login",
-              onPressed: _onClickLogin,
               showProgress: _showProgress,
             ),
           ],
@@ -75,18 +75,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _onClickLogin(BuildContext context) async {
+  void _onClickLogin() async {
     String login = _tLogin.text;
     String senha = _tSenha.text;
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    // if (!_formKey.currentState!.validate()) {
+    //   return;
+    // }
 
     print("Login: $login, Senha: $senha");
 
-    setState(() {
-      _showProgress = true;
-    });
+    // setState(() {
+    //   _showProgress = true;
+    // });
 
     ApiResponse? response = await LoginApi.login(login, senha);
     if (response.ok == true) {
