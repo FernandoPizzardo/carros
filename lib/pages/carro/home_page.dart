@@ -14,36 +14,43 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin<HomePage> {
+  TabController? _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Carros'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                text: 'Clássicos',
-              ),
-              Tab(
-                text: 'Esportivos',
-              ),
-              Tab(
-                text: 'Luxo',
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            CarrosListView(tipoCarro.classicos),
-            CarrosListView(tipoCarro.esportivos),
-            CarrosListView(tipoCarro.luxo),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Carros'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(
+              text: 'Clássicos',
+            ),
+            Tab(
+              text: 'Esportivos',
+            ),
+            Tab(
+              text: 'Luxo',
+            ),
           ],
         ),
-        drawer: DrawerList(),
       ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          CarrosListView(tipoCarro.classicos),
+          CarrosListView(tipoCarro.esportivos),
+          CarrosListView(tipoCarro.luxo),
+        ],
+      ),
+      drawer: DrawerList(),
     );
   }
 }
