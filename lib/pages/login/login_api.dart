@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/login/usuario.dart';
+import 'package:carros/utils/prefs.dart';
 import 'package:http/http.dart' as http;
 
 class LoginApi {
@@ -26,6 +27,13 @@ class LoginApi {
       Map<String?, dynamic> mapResponse = json.decode(response.body);
       if (response.statusCode == 200) {
         final user = Usuario.fromJson(mapResponse);
+
+        user.save();
+
+        Usuario user2 = await Usuario.get();
+
+        print(user2.toString());
+
         return ApiResponse.ok(user);
       } else {
         throw ApiResponse.error(mapResponse["error"]);

@@ -1,7 +1,11 @@
+import 'dart:convert' as convert;
+
+import '../../utils/prefs.dart';
+
 class Usuario {
   String? login;
-  String? nome;
-  String? email;
+  String nome;
+  String email;
   String? token;
 
   List<String>? roles;
@@ -21,5 +25,32 @@ class Usuario {
     List list = map["roles"];
     List<String> lista = list.map<String>((e) => e.toString()).toList();
     return lista;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['nome'] = this.nome;
+    data['email'] = this.email;
+    data['login'] = this.login;
+    data['token'] = this.token;
+    data['roles'] = this.roles;
+    return data;
+  }
+
+  void save() {
+    Map map = toJson();
+    String? json = convert.jsonEncode(map);
+
+    Prefs.setString("user.prefs", json);
+  }
+
+  static Future<Usuario> get() async {
+    String json = await Prefs.getString("user.prefs");
+
+    Map<String?, dynamic> map = convert.jsonDecode(json);
+
+    Usuario user = Usuario.fromJson(map);
+
+    return user;
   }
 }

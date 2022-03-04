@@ -3,6 +3,7 @@ import 'package:carros/pages/carro/carros_api.dart';
 import 'package:carros/pages/carro/carros_listview.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/prefs.dart';
 import 'carro.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,7 +20,20 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+
+    _initTabs();
+  }
+
+  _initTabs() async {
+    int? tabIdx = await Prefs.getInt("tabIdx");
     _tabController = TabController(length: 3, vsync: this);
+    setState(() {
+      _tabController?.index = tabIdx;
+    });
+
+    _tabController?.addListener(() {
+      Prefs.setInt("tabIdx", _tabController!.index);
+    });
   }
 
   @override
