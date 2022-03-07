@@ -19,16 +19,16 @@ class AppButton extends StatelessWidget {
         style: ButtonStyle(backgroundColor:
             MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-          if (states.contains(MaterialState.selected)) return Colors.indigo;
-          return Colors.indigo;
+          if (states.contains(MaterialState.selected)) return Colors.red;
+          return Colors.red;
         })),
         child: showProgress
-            ? CircularProgressIndicator(
+            ? const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               )
             : Text(
                 text.toString(),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
         onPressed: () {
           onPressed();

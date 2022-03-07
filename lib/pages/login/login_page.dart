@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/carro/home_page.dart';
 import 'package:carros/pages/login/login_api.dart';
@@ -19,10 +21,9 @@ class _LoginPageState extends State<LoginPage> {
   final _tSenha = TextEditingController();
   final double _height = 20;
   final _formKey = GlobalKey<FormState>();
+  final _streamController = StreamController<bool>();
 
   final _focusSenha = FocusNode();
-
-  bool _showProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +65,15 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: _height,
             ),
-            AppButton(
-              _onClickLogin,
-              text: "Login",
-              showProgress: _showProgress,
-            ),
+            StreamBuilder<bool>(
+                stream: _streamController.stream,
+                builder: (context, snapshot) {
+                  return AppButton(
+                    _onClickLogin,
+                    text: "Login",
+                    showProgress: snapshot.data ?? false,
+                  );
+                }),
           ],
         ),
       ),
@@ -95,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       alert(context, "Erro", response.error.toString());
     }
     setState(() {
-      _showProgress = false;
+      _streamController.add(false);
     });
   }
 

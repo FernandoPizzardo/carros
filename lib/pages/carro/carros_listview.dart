@@ -1,7 +1,13 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import '../../utils/nav.dart';
 import 'carro.dart';
+import 'carro_page.dart';
 import 'carros_api.dart';
+import 'carros_model.dart';
 
 class CarrosListView extends StatefulWidget {
   String tipo;
@@ -13,75 +19,96 @@ class CarrosListView extends StatefulWidget {
 
 class _CarrosListViewState extends State<CarrosListView>
     with AutomaticKeepAliveClientMixin<CarrosListView> {
+  final _streamController = StreamController<List<Carro>>();
   @override
   bool get wantKeepAlive => true;
+  _loadData() async {
+    List<Carro> carros = await CarrosApi.getCarros(widget.tipo);
+    _streamController.add(carros);
+  }
+
+  String get tipo => widget.tipo;
+
+  final _model = CarrosModel();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _model.fetch(tipo);
+  }
+
+  late List<Carro>? carros;
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _body();
-  }
 
-  _body() {
-    Future<List<Carro>> carros = CarrosApi.getCarros(widget.tipo);
-
-    return FutureBuilder(
-      future: carros,
-      builder: ((context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+    return Observer(
+      builder: ((context) {
+        carros = _model.carros;
+        if (_model.carros == null) {
+          return const Center(child: CircularProgressIndicator());
         }
-        List<Carro> carros = snapshot.data as List<Carro>;
-        return _listView(carros);
+        if (_model.error != null) {
+          return const Center(
+            child: Text("Erro ao carregar os carros",
+                style: TextStyle(color: Colors.red)),
+          );
+        } else {
+          return _listView(carros);
+        }
       }),
     );
   }
+}
 
-  _listView(List<Carro> carros) {
-    return ListView.builder(
-        itemCount: carros.length,
-        itemBuilder: (context, index) {
-          Carro c = carros[index];
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Image.network(
-                      c.urlFoto ?? '',
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+_listView(List<Carro>? carros) {
+  return ListView.builder(
+      itemCount: carros!.length,
+      itemBuilder: (context, index) {
+        Carro c = carros[index];
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.network(
+                    c.urlFoto ?? '',
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                  Text(
-                    c.nome ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  c.nome ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20),
-                    ),
-                    child: const Text('Detalhes'),
-                    onPressed: () {/* ... */},
+                  child: const Text('Detalhes'),
+                  onPressed: () => _onClickCarro(c, context),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(width: 8),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 20),
-                    ),
-                    child: const Text('Share'),
-                    onPressed: () {/* ... */},
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
+                  child: const Text('Share'),
+                  onPressed: () {/* ... */},
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
-          );
-        });
-  }
+          ),
+        );
+      });
+}
+
+_onClickCarro(Carro c, context) {
+  push(context, CarroPage(c));
 }
