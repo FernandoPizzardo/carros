@@ -18,10 +18,14 @@ class LoripsumApi {
 class LoripsumBloc {
   final _controller = StreamController<String>();
 
+  static String? lorim;
   Stream<String> get stream => _controller.stream;
 
   void fetch() async {
-    String text = await LoripsumApi.getLoripsum();
+    String text = lorim ?? await LoripsumApi.getLoripsum();
+
+    lorim = text;
+
     _controller.sink.add(text);
   }
 
