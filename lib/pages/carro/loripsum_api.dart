@@ -1,0 +1,31 @@
+import 'dart:async';
+
+import 'package:http/http.dart' as http;
+
+class LoripsumApi {
+  static Future<String> getLoripsum() async {
+    Uri url =
+        Uri.parse('http://loripsum.net/api/1/short/headers/decorate/bq/1/p/1');
+    var response = await http.get(url);
+    String? text = response.body;
+
+    text = text.replaceAll('<p>', '');
+    text = text.replaceAll('</p>', '');
+    return text;
+  }
+}
+
+class LoripsumBloc {
+  final _controller = StreamController<String>();
+
+  Stream<String> get stream => _controller.stream;
+
+  void fetch() async {
+    String text = await LoripsumApi.getLoripsum();
+    _controller.sink.add(text);
+  }
+
+  void dispose() {
+    _controller.close();
+  }
+}
