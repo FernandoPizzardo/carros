@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:carros/widgets/tetx_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -35,6 +36,10 @@ class _CarrosListViewState extends State<CarrosListView>
   void initState() {
     super.initState();
 
+    _fetch();
+  }
+
+  void _fetch() {
     _model.fetch(tipo);
   }
 
@@ -50,10 +55,9 @@ class _CarrosListViewState extends State<CarrosListView>
           return const Center(child: CircularProgressIndicator());
         }
         if (_model.error != null) {
-          return const Center(
-            child: Text("Erro ao carregar os carros",
-                style: TextStyle(color: Colors.red)),
-          );
+          return TextError(
+              "Erro ao carregar os carros\n\nClick para tentar novamente",
+              onPressed: _fetch);
         } else {
           return _listView(carros);
         }

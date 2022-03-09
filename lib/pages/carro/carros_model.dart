@@ -20,6 +20,7 @@ abstract class CarrosModelBase with Store {
   @action
   fetch(tipo) async {
     try {
+      error = null;
       carros = await CarrosApi.getCarros(tipo);
     } catch (e) {
       error = e as Exception?;
