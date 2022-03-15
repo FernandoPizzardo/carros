@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage>
             ? null
             : TabBar(
                 controller: _tabController,
-                tabs: [
+                tabs: const [
                   Tab(
                     text: "Clássicos",
                     icon: Icon(Icons.directions_car),
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage>
             ),
       drawer: DrawerList(),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: _onClickAdicionarCarro,
       ),
     );

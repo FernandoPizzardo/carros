@@ -70,7 +70,6 @@ class _CarrosListViewState extends State<CarrosListView>
           Carro c = carros[index];
 
           return Card(
-            color: Colors.grey[100],
             child: Container(
               padding: EdgeInsets.all(10),
               child: Column(
@@ -79,7 +78,7 @@ class _CarrosListViewState extends State<CarrosListView>
                   Center(
                     child: Image.network(
                       c.urlFoto ??
-                          "http://www.livroandroid.com.br/livro/carros/esportivos/Ferrari_FF.png",
+                          "https://static.wikia.nocookie.net/liberproeliis/images/3/3f/Dilay-Shrek_%288%29.png/revision/latest?cb=20200415013959&path-prefix=pt-br",
                       width: 250,
                     ),
                   ),

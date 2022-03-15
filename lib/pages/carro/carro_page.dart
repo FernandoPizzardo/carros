@@ -66,6 +66,7 @@ class _CarroPageState extends State<CarroPage> {
           widget.carro!.urlFoto ??
               "http://www.livroandroid.com.br/livro/carros/esportivos/Ferrari_FF.png",
         ),
+
         _primeiroBloco(),
         _segundoBloco(),
         _descricao()
