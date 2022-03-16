@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/carro.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
+import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 
@@ -80,7 +81,7 @@ class _CarroPageState extends State<CarroPage> {
         IconButton(
           icon: const Icon(Icons.favorite),
           color: Colors.red,
-          onPressed: () {},
+          onPressed: _onClickFavoritos,
         ),
         text(
           "Favorito",
@@ -130,6 +131,7 @@ class _CarroPageState extends State<CarroPage> {
         text(
           widget.carro!.descricao.toString(),
           fontSize: 16,
+          color: Colors.white,
         ),
         const SizedBox(
           height: 20,
@@ -138,7 +140,7 @@ class _CarroPageState extends State<CarroPage> {
           stream: _loripsumApiBloc.stream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              return text(snapshot.data.toString());
+              return text(snapshot.data.toString(), color: Colors.white);
             } else {
               return const CircularProgressIndicator();
             }
@@ -146,6 +148,10 @@ class _CarroPageState extends State<CarroPage> {
         )
       ],
     );
+  }
+
+  void _onClickFavoritos() {
+    FavoritoService.favoritar(widget.carro!);
   }
 }
 

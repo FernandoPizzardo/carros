@@ -11,6 +11,12 @@ class LoripsumApi {
 
     text = text.replaceAll('<p>', '');
     text = text.replaceAll('</p>', '');
+    text = text.replaceAll('<h1>', '');
+    text = text.replaceAll('</h1>', '');
+    text = text.replaceAll('<i>', '');
+    text = text.replaceAll('</i>', '');
+    text = text.replaceAll("<blockquote cite='http://loripsum.net'>", '');
+    text = text.replaceAll('</blockquote>', '');
     return text;
   }
 }

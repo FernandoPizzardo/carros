@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/home_page.dart';
-import 'package:carros/pages/favoritos/db_helper.dart';
+import 'package:carros/utils/sql/db_helper.dart';
 import 'package:carros/pages/login/login_page.dart';
 import 'package:carros/pages/login/usuario.dart';
 import 'package:carros/utils/nav.dart';

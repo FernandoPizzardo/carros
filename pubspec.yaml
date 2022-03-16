@@ -75,7 +75,7 @@ flutter:
 
   assets:
     - assets/
-    - assets/sql
+    - assets/sql/
 
 
   # To add assets to your application, add an assets section, like this:

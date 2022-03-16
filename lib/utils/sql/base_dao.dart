@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:carros/pages/carro/carro.dart';
-import 'package:carros/pages/favoritos/db_helper.dart';
-import 'package:carros/pages/favoritos/entity.dart';
+import 'package:carros/utils/sql/db_helper.dart';
+import 'package:carros/utils/sql/entity.dart';
 import 'package:sqflite/sqflite.dart';
 
 // Data Access Object
@@ -19,24 +19,25 @@ abstract class BaseDAO<T extends Entity> {
     return id;
   }
 
-  Future<List<T>?> findAll() async {
+  Future<List<T>?> query(String sql, [List<dynamic>? arguments]) async {
     final dbClient = await db;
 
-    final list = await dbClient?.rawQuery('select * from carro');
+    final list = await dbClient?.rawQuery(sql, arguments);
 
     final carros = list?.map<T>((json) => fromJson(json)).toList();
 
     return carros;
   }
 
-  Future<T> findById(int? id) async {
-    var dbClient = await db;
+  Future<List<T>?> findAll() {
+    return query('select * from $tableName');
+  }
 
-    final list =
-        await dbClient?.rawQuery('select * from carro where id = ?', [id]);
+  Future<T> findById(int? id) async {
+    final list = await query('select * from $tableName where id = ?', [id]);
 
     if (list!.isNotEmpty) {
-      return fromJson(list.first);
+      return list.first;
     }
     throw Exception("T não encontrado!");
   }
@@ -49,17 +50,18 @@ abstract class BaseDAO<T extends Entity> {
 
   Future<int?> count() async {
     final dbClient = await db;
-    final list = await dbClient!.rawQuery('select count(*) from carro');
+    final list = await dbClient!.rawQuery('select count(*) from $tableName');
     return Sqflite.firstIntValue(list);
   }
 
   Future<int> delete(int id) async {
     var dbClient = await db;
-    return await dbClient!.rawDelete('delete from carro where id = ?', [id]);
+    return await dbClient!
+        .rawDelete('delete from $tableName where id = ?', [id]);
   }
 
   Future<int> deleteAll() async {
     var dbClient = await db;
-    return await dbClient!.rawDelete('delete from carro');
+    return await dbClient!.rawDelete('delete from $tableName');
   }
 }
