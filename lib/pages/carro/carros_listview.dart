@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/widgets/tetx_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -76,8 +77,8 @@ class _CarrosListViewState extends State<CarrosListView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Center(
-                    child: Image.network(
-                      c.urlFoto ??
+                    child: CachedNetworkImage(
+                      imageUrl: c.urlFoto ??
                           "https://static.wikia.nocookie.net/liberproeliis/images/3/3f/Dilay-Shrek_%288%29.png/revision/latest?cb=20200415013959&path-prefix=pt-br",
                       width: 250,
                     ),

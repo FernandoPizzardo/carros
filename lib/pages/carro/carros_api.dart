@@ -27,9 +27,9 @@ class CarrosApi {
     List<Carro> carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
     final dao = CarroDAO();
 
-    for (Carro c in carros) {
-      dao.save(c);
-    }
+    // for (Carro c in carros) {
+    //   dao.save(c);
+    // }
 
     return carros;
   }

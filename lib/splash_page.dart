@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/home_page.dart';
 import 'package:carros/pages/favoritos/db_helper.dart';
 import 'package:carros/pages/login/login_page.dart';
@@ -41,8 +42,9 @@ class _SplashPageState extends State<SplashPage> {
       body: Container(
         color: Colors.grey,
         child: Center(
-          child: Image.network(
-              "https://c.tenor.com/zxgPvZoz_4AAAAAd/crash-car-crash.gif"),
+          child: CachedNetworkImage(
+              imageUrl:
+                  "https://c.tenor.com/zxgPvZoz_4AAAAAd/crash-car-crash.gif"),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/carro.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
 import 'package:carros/widgets/text.dart';
@@ -62,11 +63,9 @@ class _CarroPageState extends State<CarroPage> {
   _body() {
     return Center(
       child: ListView(children: <Widget>[
-        Image.network(
-          widget.carro!.urlFoto ??
-              "http://www.livroandroid.com.br/livro/carros/esportivos/Ferrari_FF.png",
+        CachedNetworkImage(
+          imageUrl: widget.carro!.urlFoto ?? "https://i.imgflip.com/64sz4u.png",
         ),
-
         _primeiroBloco(),
         _segundoBloco(),
         _descricao()
