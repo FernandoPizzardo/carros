@@ -1,10 +1,15 @@
 import 'package:carros/utils/sql/entity.dart';
 
+import '../carro/carro.dart';
+
 class Favorito extends Entity {
   int? id;
   String? nome;
 
-  Favorito({this.id, this.nome});
+  Favorito.fromCarro(Carro c) {
+    id = c.id;
+    nome = c.nome;
+  }
 
   Favorito.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -33,17 +33,14 @@ abstract class BaseDAO<T extends Entity> {
     return query('select * from $tableName');
   }
 
-  Future<T> findById(int? id) async {
-    final list = await query('select * from $tableName where id = ?', [id]);
+  Future<T?> findById(int? id) async {
+    List<T>? list = await query('select * from $tableName where id = ?', [id]);
 
-    if (list!.isNotEmpty) {
-      return list.first;
-    }
-    throw Exception("T não encontrado!");
+    return list!.isNotEmpty ? list.first : null;
   }
 
   Future<bool> exists(int id) async {
-    T c = await findById(id);
+    T? c = await findById(id);
     var exists = c != null;
     return exists;
   }

@@ -9,6 +9,7 @@ import '../../utils/nav.dart';
 import '../carro/carro.dart';
 import '../carro/carro_page.dart';
 import '../carro/carros_bloc.dart';
+import '../carro/carros_listview.dart';
 import 'favoritos_bloc.dart';
 
 class FavoritosPage extends StatefulWidget {
@@ -28,6 +29,8 @@ class _FavoritosPageState extends State<FavoritosPage>
   @override
   void initState() {
     super.initState();
+
+    _bloc.fetch();
   }
 
   @override
@@ -49,7 +52,10 @@ class _FavoritosPageState extends State<FavoritosPage>
 
         List<Carro>? carros = snapshot.data as List<Carro>?;
 
-        return _listView(carros);
+        return RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: _listView(carros),
+        );
       },
     );
   }
@@ -120,5 +126,9 @@ class _FavoritosPageState extends State<FavoritosPage>
     super.dispose();
 
     _bloc.dispose();
+  }
+
+  Future<void> _onRefresh() {
+    return _bloc.fetch();
   }
 }

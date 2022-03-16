@@ -7,19 +7,13 @@ import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/utils/network.dart';
 
 class FavoritosBloc {
-  final _streamController = StreamController<List<Carro>>();
+  final _streamController = StreamController<List<Carro>?>();
 
-  Stream<List<Carro>> get stream => _streamController.stream;
+  Stream<List<Carro>?> get stream => _streamController.stream;
 
   fetch() async {
     try {
       List<Carro>? carros = await FavoritoService.getCarros();
-
-      if (carros!.isNotEmpty) {
-        final dao = CarroDAO();
-
-        carros.forEach(dao.save);
-      }
 
       _streamController.add(carros);
     } catch (e) {

@@ -5,28 +5,33 @@ import 'favorito.dart';
 import 'favorito_dao.dart';
 
 class FavoritoService {
-  static favoritar(Carro c) async {
-    Favorito? f = Favorito(
-      id: c.id,
-      nome: c.nome,
-    );
+  static Future<bool> favoritar(Carro c) async {
+    Favorito? f = Favorito.fromCarro(c);
 
     final dao = FavoritoDAO();
 
-    final bool exists = await dao.exists(c.id!);
+    final exists = await dao.exists(c.id!);
 
     if (exists) {
       dao.delete(c.id!);
+      return false;
     } else {
       dao.save(f);
+      return true;
     }
-
-    dao.save(f);
   }
 
   static Future<List<Carro>?> getCarros() async {
     List<Carro>? carros = await CarroDAO()
-        .query("select * from carro c c favorito f where c.id = f.id");
+        .query("select * from carro c, favorito f where c.id = f.id");
     return carros;
+  }
+
+  static Future<bool> isFavorito(Carro c) async {
+    final dao = FavoritoDAO();
+
+    final exists = await dao.exists(c.id!);
+
+    return exists;
   }
 }

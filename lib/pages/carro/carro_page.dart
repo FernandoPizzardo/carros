@@ -6,7 +6,7 @@ import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 
 class CarroPage extends StatefulWidget {
-  Carro? carro;
+  Carro carro;
   CarroPage(this.carro);
 
   @override
@@ -15,9 +15,16 @@ class CarroPage extends StatefulWidget {
 
 class _CarroPageState extends State<CarroPage> {
   final _loripsumApiBloc = LoripsumBloc();
+  Color color = Colors.grey;
   @override
   void initState() {
     super.initState();
+
+    FavoritoService.isFavorito(widget.carro).then((favorito) {
+      setState(() {
+        color = favorito ? Colors.red : Colors.grey;
+      });
+    });
 
     _loripsumApiBloc.fetch();
   }
@@ -26,7 +33,7 @@ class _CarroPageState extends State<CarroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.carro!.nome.toString()),
+        title: Text(widget.carro.nome.toString()),
         actions: [
           // actions = botões na parte direita
           IconButton(
@@ -65,7 +72,7 @@ class _CarroPageState extends State<CarroPage> {
     return Center(
       child: ListView(children: <Widget>[
         CachedNetworkImage(
-          imageUrl: widget.carro!.urlFoto ?? "https://i.imgflip.com/64sz4u.png",
+          imageUrl: widget.carro.urlFoto ?? "https://i.imgflip.com/64sz4u.png",
         ),
         _primeiroBloco(),
         _segundoBloco(),
@@ -80,7 +87,7 @@ class _CarroPageState extends State<CarroPage> {
       children: [
         IconButton(
           icon: const Icon(Icons.favorite),
-          color: Colors.red,
+          color: color,
           onPressed: _onClickFavoritos,
         ),
         text(
@@ -108,11 +115,11 @@ class _CarroPageState extends State<CarroPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.carro!.nome.toString(),
+              widget.carro.nome.toString(),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              widget.carro!.tipo.toString(),
+              widget.carro.tipo.toString(),
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
@@ -129,7 +136,7 @@ class _CarroPageState extends State<CarroPage> {
           height: 20,
         ),
         text(
-          widget.carro!.descricao.toString(),
+          widget.carro.descricao.toString(),
           fontSize: 16,
           color: Colors.white,
         ),
@@ -150,8 +157,12 @@ class _CarroPageState extends State<CarroPage> {
     );
   }
 
-  void _onClickFavoritos() {
-    FavoritoService.favoritar(widget.carro!);
+  Future<void> _onClickFavoritos() async {
+    bool favorito = await FavoritoService.favoritar(widget.carro);
+
+    setState(() {
+      color = favorito ? Colors.red : Colors.grey;
+    });
   }
 }
 
