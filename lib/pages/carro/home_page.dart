@@ -1,4 +1,5 @@
 import 'package:carros/drawer_list.dart';
+import 'package:carros/pages/carro/carro_form_page.dart';
 import 'package:carros/pages/carro/carros_api.dart';
 import 'package:carros/pages/carro/carros_listview.dart';
 import 'package:carros/pages/carro/carros_page.dart';
@@ -96,6 +97,6 @@ class _HomePageState extends State<HomePage>
   }
 
   void _onClickAdicionarCarro() {
-    push(context, LoginPage());
+    push(context, CarroFormPage());
   }
 }

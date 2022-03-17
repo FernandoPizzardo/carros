@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/carro.dart';
+import 'package:carros/pages/carro/carro_form_page.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
+import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,7 @@ class CarroPage extends StatefulWidget {
 class _CarroPageState extends State<CarroPage> {
   final _loripsumApiBloc = LoripsumBloc();
   Color color = Colors.grey;
+  Carro? carro;
   @override
   void initState() {
     super.initState();
@@ -48,8 +51,8 @@ class _CarroPageState extends State<CarroPage> {
               _onClickVideo;
             },
           ),
-          PopupMenuButton(
-              onSelected: (value) => _onClickPopupMenu,
+          PopupMenuButton<String>(
+              onSelected: _onClickPopupMenu,
               itemBuilder: (BuildContext context) {
                 return [
                   const PopupMenuItem(
@@ -164,10 +167,21 @@ class _CarroPageState extends State<CarroPage> {
       color = favorito ? Colors.red : Colors.grey;
     });
   }
-}
 
-void _onClickPopupMenu(String value) {
-  print("PopupMenu: $value");
+  _onClickPopupMenu(String value) {
+    switch (value) {
+      case "Editar":
+        push(
+            context,
+            CarroFormPage(
+              carro: carro,
+            ));
+        break;
+      case "Deletar":
+        print("Deletar");
+        break;
+    }
+  }
 }
 
 void _onClickMapa() {}
