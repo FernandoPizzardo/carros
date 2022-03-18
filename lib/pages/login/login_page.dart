@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                 stream: _streamController.stream,
                 builder: (context, snapshot) {
                   return AppButton(
-                    _onClickLogin,
+                    onPressed: _onClickLogin,
                     text: "Login",
                     showProgress: snapshot.data ?? false,
                   );

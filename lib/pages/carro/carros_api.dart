@@ -1,9 +1,10 @@
-import 'dart:convert';
-import 'package:carros/pages/login/usuario.dart';
+import 'dart:convert' as convert;
 
-import '../favoritos/carro_dao.dart';
-import 'carro.dart';
+import 'package:carros/pages/login/usuario.dart';
 import 'package:http/http.dart' as http;
+
+import '../api_response.dart';
+import 'carro.dart';
 
 class tipoCarro {
   static const String classicos = "classicos";
@@ -18,19 +19,55 @@ class CarrosApi {
       "Content-Type": "application/json",
       "Authorization": "Bearer ${user.token}"
     };
+    var url = Uri.parse(
+        'https://carros-springboot.herokuapp.com/api/v2/carros/tipo/$tipo');
 
-    var uri = Uri.parse(
-        'https://carros-springboot.herokuapp.com/api/v1/carros/tipo/$tipo');
-    var response = await http.get(uri, headers: headers);
+    print("GET > $url");
+
+    var response = await http.get(url, headers: headers);
+
     String json = response.body;
-    List list = jsonDecode(json);
-    List<Carro> carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
-    final dao = CarroDAO();
 
-    // for (Carro c in carros) {
-    //   dao.save(c);
-    // }
+    List list = convert.json.decode(json);
+
+    List<Carro> carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
 
     return carros;
+  }
+
+  static Future<ApiResponse<bool>> save(Carro c) async {
+    Usuario user = await Usuario.get();
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer ${user.token}"
+    };
+
+    Uri url =
+        Uri.parse('https://carros-springboot.herokuapp.com/api/v2/carros');
+
+    print("POST > $url");
+
+    String json = c.toJson();
+
+    print("   JSON > $json");
+
+    var response = await http.post(url, body: json, headers: headers);
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 201) {
+      Map mapResponse = convert.json.decode(response.body);
+
+      Carro carro = Carro.fromJson(mapResponse);
+
+      print("Novo carro: ${carro.id}");
+
+      return ApiResponse.ok(true);
+    }
+
+    Map mapResponse = convert.json.decode(response.body);
+    return ApiResponse.error(mapResponse["error"]);
   }
 }

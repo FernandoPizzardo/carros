@@ -1,5 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/carro/carro.dart';
+import 'package:carros/pages/carro/carros_api.dart';
+import 'package:carros/widgets/alert.dart';
+import 'package:carros/widgets/app_button.dart';
+import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +60,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: _form(),
       ),
     );
@@ -67,16 +72,16 @@ class _CarroFormPageState extends State<CarroFormPage> {
       child: ListView(
         children: <Widget>[
           _headerFoto(),
-          Text(
+          const Text(
             "Clique na imagem para tirar uma foto",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.grey,
             ),
           ),
-          Divider(),
-          Text(
+          const Divider(),
+          const Text(
             "Tipo",
             style: TextStyle(
               color: Colors.blue,
@@ -84,48 +89,26 @@ class _CarroFormPageState extends State<CarroFormPage> {
             ),
           ),
           _radioTipo(),
-          Divider(),
-          TextFormField(
-            controller: tNome,
-            keyboardType: TextInputType.text,
-            validator: _validateNome,
-            style: TextStyle(color: Colors.blue, fontSize: 20),
-            decoration: new InputDecoration(
-              hintText: '',
-              labelText: 'Nome',
-            ),
-          ),
-          TextFormField(
+          AppText(
+            hint: "Nome",
             controller: tDesc,
             keyboardType: TextInputType.text,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-            ),
-            decoration: new InputDecoration(
-              hintText: '',
-              labelText: 'Descrição',
-            ),
+            validator: _validateNome,
+            label: '',
           ),
-          Container(
-            height: 50,
-            margin: new EdgeInsets.only(top: 20.0),
-            child: RaisedButton(
-              color: Colors.blue,
-              child: _showProgress
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    )
-                  : Text(
-                      "Salvar",
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                    ),
-              onPressed: _onClickSalvar,
-            ),
-          )
+          AppText(
+            hint: "Descrição",
+            controller: tDesc,
+            keyboardType: TextInputType.text,
+            validator: _validateNome,
+            label: '',
+          ),
+          const Divider(),
+          // AppButton(
+          //   onPressed: _onClickSalvar(),
+          //   text: "Salvar",
+          //   showProgress: _showProgress,
+        //  ),
         ],
       ),
     );
@@ -151,7 +134,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
           groupValue: _radioIndex,
           onChanged: _onClickTipo,
         ),
-        Text(
+        const Text(
           "Clássicos",
           style: TextStyle(color: Colors.blue, fontSize: 15),
         ),
@@ -160,7 +143,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
           groupValue: _radioIndex,
           onChanged: _onClickTipo,
         ),
-        Text(
+        const Text(
           "Esportivos",
           style: TextStyle(color: Colors.blue, fontSize: 15),
         ),
@@ -169,7 +152,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
           groupValue: _radioIndex,
           onChanged: _onClickTipo,
         ),
-        Text(
+        const Text(
           "Luxo",
           style: TextStyle(color: Colors.blue, fontSize: 15),
         ),
@@ -223,12 +206,18 @@ class _CarroFormPageState extends State<CarroFormPage> {
     });
 
     print("Salvar o carro $c");
-
-    await Future.delayed(Duration(seconds: 3));
+    ApiResponse<bool> response = await CarrosApi.save(c);
 
     setState(() {
       _showProgress = false;
     });
+    if (response.ok!) {
+      alert(context, "Carro Salvo!", callback: () {
+        Navigator.pop(context);
+      });
+    } else {
+      alert(context, response.toString());
+    }
 
     print("Fim.");
   }

@@ -174,7 +174,7 @@ class _CarroPageState extends State<CarroPage> {
         push(
             context,
             CarroFormPage(
-              carro: carro,
+              carro: widget.carro,
             ));
         break;
       case "Deletar":

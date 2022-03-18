@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
   final String? text;
-  final Function onPressed;
+  final Function? onPressed;
   bool showProgress;
-  AppButton(
-    this.onPressed, {
+
+  AppButton({
+    this.onPressed,
     Key? key,
     this.text,
     this.showProgress = false,
@@ -31,7 +32,7 @@ class AppButton extends StatelessWidget {
                 style: const TextStyle(color: Colors.white),
               ),
         onPressed: () {
-          onPressed();
+          onPressed!();
         },
       ),
     );
